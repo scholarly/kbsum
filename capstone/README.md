@@ -10,6 +10,7 @@ keywords: password habits, password manager, single sign-on, authentication prot
 # Capstone Proposal Summary 
 
 Passwords are the most commonly used method of authentication.  While there are many issues with the way passwords are used today, among the most serious are that many people (1) select weak passwords, and (2) reuse those weak passwords in many different contexts.  One solution to this problem is to encourage the use of password managers, which generate a unique, high-entropy password for each security domain and keep all of these passwords in a single store encrypted with a single well-chosen password.  Remembering dozens of strong passwords is not possible for most people, but remembering one is possible.
+
 This project will explore some of the problems with current password managers and propose solutions to overcome them. The project deliverables will include a new password manager prototype with a browser helper to manage web logins.
 
 ### Threat Model
@@ -37,41 +38,18 @@ Currently available password managers fall into four broad categories:
 
 First, many modern browsers are able to remember passwords that the user has typed in. These built-in password managers are easiest to use but least secure.  The biggest problem is that, by default, the user does not have to enter a master password to access the data.  This means that it is "encoded", not "encrypted".  Anyone with access to the browser also has access to the stored passwords.
 
-Mozilla Firefox stores passwords in two files in the user profile directory (key3.db and signons.sqlite). By default these are not encrypted, but if you set a master password, they really are 
+Mozilla Firefox stores passwords in two files in the user profile directory. `key3.db` holds the encryption key and `signons.sqlite` holds the passwords. Unfortunately key3.db is not protected by default. But if you set a master password, you really can't get them back without it. [https://support.mozilla.org/en-US/kb/Recovering%20important%20data%20from%20an%20old%20profile#w_passwords]
+[https://support.mozilla.org/en-US/kb/reset-your-master-password-if-you-forgot-it]
+::
+	https://support.mozilla.org/en-US/kb/create-secure-passwords-keep-your-identity-safe
+	They are trying, but this is very bad advice that I see repeated many different places.
+	What percentage of the people reading this article are going to follow this advice to the letter?  What is going to happen to their other accounts when the first one is compromised? The problem with security through obscurity is that it fails dramatically when the secret is no longer obscure.
 
-	"Your passwords are stored in two different files, both of which are required:
-	* key3.db - This file stores your key database for your passwords. To transfer saved passwords, you must copy this file along with the following file.
-	* signons.sqlite - Saved passwords.
-	"https://support.mozilla.org/en-US/kb/Recovering%20important%20data%20from%20an%20old%20profile#w_passwords
- 
-  "Even though the Password Manager stores your usernames and passwords on your hard drive in an encrypted format, someone with access to your computer can still see or use them. The Use a Master Password to protect stored logins and passwords article shows you how to prevent this and keep you protected in the event your computer is lost or stolen."
+Internet Explorer stores passwords in two different places, which are normally only accessible to the owner and to any adiministrators. Excellent.  Unfortunately, the encryption key is actually the URL of the website the password is for (DOH!).  And, unless the entire hard disk is encrypted, getting Adminitrator privileges on a Windows machine is pretty easy if you have physical access. (Which our attacker does not have, but with all things considered, the protection is pretty weak.) [http://stackoverflow.com/questions/3023561/where-does-internet-explorer-store-saved-passwords#3024795] I will give IE credit, however, for not blatantly *showing* anyone the passwords, as Chrome does.
 
-https://support.mozilla.org/en-US/kb/reset-your-master-password-if-you-forgot-it
-"Resetting your master password will remove all of your saved usernames and passwords." YES! They did something right: the password database is actually encrypted.
+Google Chrome has several different password stores. On Windows, it uses the same API that IE does (weak). On MacOS, it uses the system Keychain Access (just like Safari and other well-behaved apps that need to store secrets). Keychain Access encrypts the secrets (but not the metadata) with TripleDES (still respectable, but not considered a strong cipher by modern standards).  However, by default the store is keyed from the same password you use to log in. The wisdom of this is debatable.
 
-https://support.mozilla.org/en-US/kb/create-secure-passwords-keep-your-identity-safe
-They are trying, but this is very bad advice that I see repeated many different places.
-What percentage of the people reading this article are going to follow this advice to the letter?  What is going to happen to their other accounts when the first one is compromised? The problem with security through obscurity is that it fails dramatically when the secret is no longer obscure.
-
-  * encryption: WIN
-  * education: WEAK but not an outright fail.
-
-
-### Internet Explorer
-
-http://stackoverflow.com/questions/3023561/where-does-internet-explorer-store-saved-passwords#3024795http://stackoverflow.com/questions/3023561/where-does-internet-explorer-store-saved-passwords#3024795
- a) in the kernel-integrated credential store -- this is accessible to the owning user and any administrator (which means nothing if the attacker physical access, unless the whole drive is encrypted) (NTPasswd easily changes any windows password if they can boot your a machine to DOS with your hard drive in it.)
- b) encrypted with the URL of the associated site -- again pretty meaningless because the key is readily available to anyone who can read your history list, or just guess which site he wants to attack.
-  
-  * Overall: FAIL
-  * Honorable Mention: at least IE won't blatantly *show* you the plaintext passwords as Chrome will.
-
-### Google Chrome: 
-	"Google Chrome can save your usernames and passwords for different websites. The browser can then automatically complete the sign-in fields for you when you next visit these websites.  These passwords are stored in the same system that contains your saved passwords from other browsers. On a Mac, Google Chrome uses the Keychain Access to store your login information.  All these passwords -- including the passwords you've saved from other browsers -- can be synced to your Google Account, so that they are available on other computers you're using."
-[https://support.google.com/chrome/answer/95606?hl=en]
-
- * FAIL on Windows (uses same API as IE)
- * **UTTER** FAIL on Linux (The API is in place, but it does nothing.)
+The scary code in Chrome is for Linux. It has support for gnome-keyring and kwallet, which are probably at least as secure as Keychain Access. However, the encryption code for the *default* store looks like this:
 
         in chromium/src/chrome/browser/password_manager/login_database_posix.cc 
 
@@ -83,11 +61,10 @@ http://stackoverflow.com/questions/3023561/where-does-internet-explorer-store-sa
 	  return true;
 	}
 
- * ok that was surprising.  But there is support for kwallet and gnome keyring, I just don't know how to turn it on.
+OOPS! The API is in place, but it does nothing. The comment is actually funny in a sick way.
 
- * WEAK on Mac: https://en.wikipedia.org/wiki/Keychain_Access. Encrypts passwords but not metadata with TripleDES. Defaults to synchronize password with login password. This is better than nothing, but if the attacker can login as you on your computer, you have lost everything. 
- * Honorable Mention: http://www.pcworld.com/article/250120/google_working_on_password_generator_for_chrome.html
-But this article is dated 16 months ago, and nothing has materialized in the release. 
+I will give Google an Honorable mention for [wanting to improve the situation][http://www.pcworld.com/article/250120/google_working_on_password_generator_for_chrome.html], but since that was sixteen months ago, and I haven't seen anything appear in the releases, I won't hold my breath.
+
 The linked article http://www.pcworld.com/article/181347/a_single_sign_on_for_all_your_websites_google_hopes_so.html only confirms that OpenID is all but dead.  You can use a Google OpenID from other sites, but you cannot create a account on any of Google's sites using another OpenID provider.  It seems Google will let you use OpenID as long as they are holding the keys.  Which completely defeats the purpose. Flickr will accept Google or Facebook or Yahoo, but no others.)
 
 
@@ -103,11 +80,6 @@ The linked article http://www.pcworld.com/article/181347/a_single_sign_on_for_al
 
 KeePass, Tk8, and 1Password are among the many standalone programs that you can install to store your data on your computer. You can keep the database synchronised across many computers by using a cloud-based storage system like DropBox.
 
-http://blog.zorinaq.com/?a=2011-m05#e54  Visa/Wells Fargo weak password policy
-http://blog.crackpassword.com/2013/02/yahoo-dropbox-and-battle-net-hacked-stopping-the-chain-reaction/
-http://thepasswordproject.com/leaked_password_lists_and_dictionaries
-leaked_password_lists_and_dictionaries. (2012, Jul 13). In *The Password Project*. Retrieved 21:26, July 10, 2013, from http://thepasswordproject.com/doku.php?id=leaked_password_lists_and_dictionaries&rev=1342207197.
-
 
 
 
@@ -117,17 +89,31 @@ leaked_password_lists_and_dictionaries. (2012, Jul 13). In *The Password Project
 
 I cannot emphasize this too much.  While the traditional Dolev-Yao model assumes that the network is compromised but the nodes are secure, *this is not a reasonable assumption today* and probably never will be.  Except in a wireless network, an attacker cannot control a link without first controlling a node.  Assume that your server administrator is honest and competent but overworked, possibly naive, and certainly fallible.  Assume that the server *will* be compromised sooner or later. (If you want to test your security, brag on IRC about how your server has bank account details for 10,000 customers.)  Reusing passwords under this threat model is utterly foolish.
 
-Steve Gibson's password haystack strategy is certainly workable for a password that you know will be protected by a good slow key derivation function.  It is not, however, appropriate for a password that *might* be stored or seen in plain text -- i.e. any server-side password.  If you use the same padding pattern for all of your passwords, as Steve suggests, and your pattern gets revealed by a careless application developer, a smart cracker can use that pattern against you.
+Why is this really such a problem?  Why can't we assume that the server will stay safe?
+
+
+[http://blog.crackpassword.com/2013/02/yahoo-dropbox-and-battle-net-hacked-stopping-the-chain-reaction/]
+
+leaked_password_lists_and_dictionaries. (2012, Jul 13). In *The Password Project*. Retrieved 21:26, July 10, 2013, from http://thepasswordproject.com/doku.php?id=leaked_password_lists_and_dictionaries&rev=1342207197.
+
+
+[Steve Gibson's password haystack strategy][https://www.grc.com/haystack.htm] is certainly workable for a password that you know will be protected by a good slow key derivation function.  It is not, however, appropriate for a password that *might* be stored or seen in plain text -- i.e. any server-side password.  If you use the same padding pattern for all of your passwords, as Steve suggests, and your pattern gets revealed by a careless application developer, a smart cracker can use that pattern against you. He does warn against this, but not strongly enough, in my opinion.
+
 
 ### Use Random Passwords
 
 Each security domain should have a long, unique, random password.  Uniqueness prevents a compromise of one domain from leading to compromises in others.  Randomness prevents success through an online dictionary attack.  We assume that administrators will rate-limit and block any high-speed online attack, so such will work only against very poor passwords.
-Length and complexity forces the attacker to use brute-force attack if he obtains a hashed password file.  Once we have committed to storing each password, generating unique random passwords is easy. The complexity is only limited by the rules imposed by the security domain's policy (reference here best and worst practices of 'in-the-wild' policies:
-Wells Fargo/Visa
-Godaddy
-)
+Length and complexity forces the attacker to use brute-force attack if he obtains a hashed password file.  Once we have committed to storing each password, generating unique random passwords is easy. The complexity is only limited by the rules imposed by the security domain's policy. For your entertainment, I present the following less-than-optimal password complexity policies:
 
-### Use Expensive KDFs
+Hunt, Troy (2011), "Who's Who of Bad Password Practices", [http://www.troyhunt.com/2011/01/whos-who-of-bad-password-practices.html]
+[Visa/Wells Fargo weak password policy][http://blog.zorinaq.com/?a=2011-m05#e54] makes the password way too short.
+[Godaddy][http://support.godaddy.com/help/article/2653/generating-a-strong-password] allows a good long password, but restricts the alpabet to four out of 33 possible special characters.
+
+### Use An Expensive KDF
+
+A key derivation function (KDF) is a special cryptographic tool that turns your weak, memorable, low-entropy password, into something that at least appears to be random -- something that is usable as a secret key for encrypting data.  And it does this in a way that is not generally reversable. We want this function to be slow and expensive because, you know your password and only have to use the function once for each time you unlock your database, so waiting 1 or 2 seconds is not a big deal. However, the attacker has to guess your password, and if you chose it well, he will have to guess it many times. The slower that function is, the longer it will take for him to guess your password.
+
+There are three main candidates for your KDF.  The standard one that most people use nowadays is called PBKDF2. Most people use it with SHA-1, a very fast hash function.  The problem is that the attacker's super cracking hardware is *designed especially for doing SHA-1 **very quickly** -- not what you wanted to hear.  The second choice, `bcrypt` is *much* slower to compute.  The third choice, a relatively new invention, is called `scrypt`.  What makes scrypt special is that not only can you make it very slow, but you can also make it take up a lot of memory -- not what the attacker wanted to hear: his super cracking hardware doesn't have very much memory because it would be too expensive.  What scrypt does is force the attacker to use normal computers to check each password guess. So unless he *really* wants *your* password, he will probably say "Scrypt? Never mind. I'll go hack someone who uses SHA-1"
 
 We assume that if the attacker has obtained the password file, he also has access to any other unencrypted data stored on the same server, so a good password no longer benefits us. (The attacker has already *won* this domain.)  However, it may benefit others who do not use unique passwords because it will absorb some of the attacker's time, epecially if the passwords are hashed with an expensive KDF. The attacker will only attempt to crack all of the passwords in the hope of obtaining credentials that are reused.  If the hashes are created with scrypt or bcrypt, the attacker may simply give up and move on to lower-hanging fruit, as his hardware is designed for simpler hash functions.
 
@@ -323,10 +309,8 @@ http://lifehacker.com/5876541/use-this-infographic-to-pick-a-good-strong-passwor
 http://lifehacker.com/5796816/why-multiword-phrases-make-more-secure-passwords-than-incomprehensible-gibberish
 http://lifehacker.com/5785420/the-only-secure-password-is-the-one-you-cant-remember
 
-Hunt, Troy (2011), "Who's Who of Bad Password Practices", http://www.troyhunt.com/2011/01/whos-who-of-bad-password-practices.html
 
 
-http://support.godaddy.com/help/article/2653/generating-a-strong-password
 http://www.infoworld.com/t/data-security/amazon-ec2-enables-brute-force-attacks-the-cheap-148447
 http://s3.amazonaws.com/dnr/dotnetrocks_0626_rob_conery.pdf What's wrong with OpenID? privacy, single point of failure, people still use weak passwords. easy phishing attack for naive providers.
 
