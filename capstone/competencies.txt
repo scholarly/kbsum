@@ -1,0 +1,185 @@
+﻿IT Fundamentals I - Foundations
+
+4. The graduate demonstrates knowledge of Web browser function, use, configuration, and customization.
+	configuration of the web browser to use the password manager
+
+
+IT Fundamentals II - Technical Fundamentals
+
+7. The graduate recommends appropriate strategies for classifying, controlling access, setting permission, configuring, optimizing, and upgrading basic system security.
+       The entire point of the project is to break new ground in password security
+
+IT Fundamentals III - Technology Management Fundamentals
+
+3. The graduate communicates effectively with colleagues and clients in a technological environment.
+
+Network Fundamentals
+1. The graduate analyzes the characteristics of various network topologies and access methods.
+2. The graduate analyzes standards, procedures, and protocols used in wired and wireless networking technologies.
+
+       developing the threat model requires thorough understanding of HTTP and SSL
+
+Programming I
+1. The graduate can write code in the specified language to create declarations, initializations, and scoping.
+2. The graduate can write code in a specified language to implement flow control.
+3. The graduate demonstrates an understanding of object-oriented concepts.
+4. Graduate demonstrates understanding of fundamentals of algorithm development, problem solving and data modeling.
+
+     yeah, I can code. JavaScript, Python, and C are used in the prototype
+
+
+Scripting Techniques
+1. The graduate demonstrates understanding of characteristics and features of Web programming languages.
+2. The graduate can demonstrate the ability to work with variables and data.
+3. The graduate demonstrates understanding of decision structures.
+4. The graduate demonstrates understanding of functions, methods, properties and events.
+5. The graduate demonstrates understanding of how to control windows and frames in a Web programming language.
+6. The graduate demonstrates understanding of client side Web programming language.
+7. The graduate demonstrates understanding of custom Web programming language objects.
+
+    JavaScript is an essential part of the browser helper
+
+
+Introduction to Programming I/II
+1. The graduate develops working programs that use appropriate control structures and accurately evaluates execution paths in program code.
+2. The graduate designs and develops algorithms for problem solving and implements those algorithms using appropriate program code.
+3. The graduate develops working programs that use appropriate data structures for problem solving.
+4. The graduate develops and interprets Unified Modeling Language (UML) diagrams which model object-oriented designs.
+5. The graduate applies object-oriented concepts, develops object-oriented designs, and uses object-oriented programming techniques.
+6. The graduate applies software testing and troubleshooting strategies to determine programming errors and recommend appropriate solutions.
+Web Programming
+1. The graduate applies characteristics and features of Web programming languages.
+2. The graduate demonstrates the ability to create, modify, and utilize variables and data.
+3. The graduate demonstrates understanding of decision structures.
+4. The graduate demonstrates understanding of functions, methods, properties, and events.
+5. The graduate demonstrates understanding of how to control windows in a Web programming language.
+6. The graduate demonstrates understanding of client side Web programming language.
+7. The graduate demonstrates understanding of custom Web programming language objects.
+
+
+Web Systems and Technologies
+2. The graduate creates Web pages using specified markup and programming languages associated with client server systems.
+3. The graduate utilizes the popular tools used for dynamic Web page creation.
+     node.js is certainly popular. 
+
+
+Networks I
+6. The graduate differentiates and explains network security devices and methods for troubleshooting common security threats.
+     section ___ gives an in-depth threat model
+
+Project Management
+2. The graduate creates a project plan.
+    yes, I did this
+4. The graduate explains the strategies and processes of project closure, acceptance, and delivery.
+    hmmm
+
+
+Security I
+1. The graduate identifies and discusses basic concepts of security and security threats, and recommends security procedures.
+2. The graduate recommends appropriate methods for controlling accessing data and information and for authenticating users and groups in gaining that access.
+3. The graduate identifies security needs and recommends appropriate security practices for network infrastructures.
+4. The graduate identifies and explains the role of encryption in network security.
+5. The graduate explains and makes recommendations for appropriate security strategies and procedures for organizational operations.
+6. The graduate evaluates risks associated with network security and recommends monitoring strategies and methods.
+    this is the whole point of the project
+
+
+
+
+IT Capstone
+1. The graduate integrates and synthesizes competencies from across the degree program and thereby demonstrates the ability to participate in and contribute value to the chosen professional field.
+   This project will be a significant contribution to the state of the art.  While the concepts are well-known, no one seems to have brought them all together into a concrete solution.  The problem is an important one that many people care about. 
+
+
+Technical Writing
+1. The candidate prepares a project proposal according to the guidelines specified in the program guide.
+   Writing this paper has taught me to write for a much larger audience than I am accustomed to adressing.
+
+
+----------------------------------------
+
+General Education Social Sciences (Lib Arts)
+1. The graduate examines the development, characteristics, functions, and interdependence of modern economic, social, and political institutions.
+2. The graduate recognizes and analyzes connections between human cultures and the physical environment, and applies knowledge of these connections to explain social and political change.
+3. The graduate examines the distinctive characteristics and forms of social scientific inquiry; recognizes various behavioral, cognitive, and social phenomena; and applies social science theories and methods to evaluate and explain phenomena.
+4. The graduate examines fundamental social science concepts and theories that relate to the development of human thought, behavior, and social relationships.
+
+
+Language and Communication
+1. The graduate documents sources consistently and accurately.
+2. The graduate constructs meaning by using multiple strategies to comprehend a variety of texts.
+3. The graduate identifies relationships among ideas, points of view, and language choices by reading critically.
+4. The graduate selects information from oral, written, or electronic sources to inform an audience about complex subjects.
+5. The graduate accurately evaluates the validity, reliability, and significance of information in a given context.
+6. The graduate prepares an oral presentation with a visual aid.
+7. The graduate presents information to an audience using effective communication strategies.
+8. The graduate adapts a particular writing to meet the needs of a specific audience, purpose, and situation.
+9. The graduate applies a process approach to creating effective writings for different audiences and purposes.
+
+
+Literature, Arts and the Humanities
+1. The graduate recognizes and analyzes relationships within the disciplines of the humanities; and how themes and concepts connect across individual disciplines of the humanities.
+2. The graduate recognizes and analyzes the interaction and integration of the humanities with cultures, and how specified cultural attitudes change over time.
+3. The graduate examines the characteristics, historical origins, and roles of ethics and belief systems in human cultures, and applies this knowledge to explain human behavior.
+4. The graduate recognizes and defines concepts from the visual and performing arts, identifies and defines media and processes, and applies these concepts and knowledge in evaluating works of art.
+5. The graduate recognizes various creative, philosophical, and linguistic artifacts and events in the humanities and applies approaches and methods of the humanities to address them.
+6. The graduate examines concepts and modes of expression in human imagination, values, and emotions.
+
+
+Natural Science (Lib Arts)
+1. The graduate recognizes and analyzes various natural phenomena; applies natural science methods, and approaches to these natural phenomena.
+2. The graduate examines fundamental concepts and theories in the natural sciences.
+3. The graduate analyzes the organization, interactions, and predictable processes of the universe.
+4. The graduate identifies and analyzes the organization, interactions, and processes of the Earth.
+5. The graduate analyzes the components, organization, interactions, and processes of ecosystems.
+6. The graduate recognizes and applies underlying principles of matter and chemical reactions to analyze the structure, organization, interactions, and processes of organisms.
+
+
+Quantitative Literacy (IT)
+1. The graduate applies the fundamental ideas of discrete mathematics including logic, set theory, and graph theory in formulating and solving problems.
+2. The graduate demonstrates computational proficiency with real numbers and recognizes the properties of the real number system and its subsets.
+3. The graduate represents numbers in different forms, recognizes relationships among numbers and numbers systems, deduces the meanings of operations, and demonstrates a conceptual understanding of numbers.
+4. The graduate demonstrates computational proficiency, including a conceptual understanding of numbers, ways of representing numbers, relationships among numbers and numbers systems, and meanings of operations.
+5. The graduate solves algebraic equations and constructs equations to solve real-world problems.
+6. The graduate understands and applies the basic properties of functions to solve problems.
+7. The graduate applies basic geometric, trigonometric, and measurement skills and processes to problems in mathematics as well as in a variety of disciplines.
+8. The graduate understands and applies elementary probability and statistics concepts and knows the relationship between them and sampling and inference.
+9. The graduate constructs reasonable quantitative arguments, reasons deductively and inductively, solves quantitative problems using a variety of techniques, and determines whether a given argument has logical flaws.
+10. The graduate interprets documents and materials containing quantitative information and effectively communicates mathematical arguments and quantitative results.
+
+
+Reasoning and Problem Solving
+1. The graduate analyzes open-ended problems by learning about the problem and evaluating the accuracy and relevance of different perspectives on the problem.
+2. The graduate evaluates different sources representing a range of perspectives on a problem in order to weigh the implications and consequences of different solutions to the problem.
+3. The graduate identifies internal and external biases and assumptions related to a problem, and evaluates the influence and validity of these biases and assumptions
+4. The graduate synthesizes information to understand a problem’s complexities and potential solutions, and then evaluates the reasoning and evidence in support of these different solutions.
+5. The graduate logically brings together information to arrive at a viable solution to a problem, and then clearly and accurately communicates the results.
+6. The graduate recognizes the value of critical thinking in identifying and understanding the underlying structures of the disciplines and professions.
+College Mathematics
+1. The student utilizes the operations, processes, and procedures of basic numeracy and calculation skills to solve quantitative problems in arithmetic and basic algebra.
+2. The student applies the operations, processes, and procedures of basic algebra to solve quantitative problems.
+3. The student utilizes the operations, processes, and procedures of basic geometry and measurement to solve problems in mathematics.
+4. The graduate evaluates quantitative data by interpreting statistical and graphic representations and solves basic probability problems.
+
+
+College Reading and Writing
+1. The student utilizes Standard English language grammar, punctuation, and sentence structure to create clear, effective, and appropriate written communication.
+2. The student utilizes effective reading strategies to identify meaning and purpose in written communications.
+3. The student selects information to inform an audience about subjects and adapts writing to meet the needs of audience, purpose, and situation.
+Organizational Behavior and Leadership
+1. The graduate can describe the effects of specified influences on individual behavior.
+2. The graduate can determine which type of team and team leadership should be used to accomplish a task or project.
+3. The graduate can recommend appropriate principals or techniques for guiding the development of a group.
+4. The graduate analyzes the culture within an organization to determine how to work effectively within that organization.
+5. The graduate can analyze leadership theories, methods and tools in given situations and select the appropriate behavior of the leader.
+6. The graduate can develop and recommend how to implement effective performance evaluation processes.
+
+
+Management
+1. The graduate can explain the strategic planning process.
+2. The graduate can describe how to establish a total quality management program in a product operation and in a service operation.
+3. The graduate can describe how to establish and promote an entrepreneurial emphasis within an organization.
+4. The graduate can recommend effective techniques for managing conflict and change.
+5. The graduate can correctly apply principles of human resource management in a given situation.
+6. The graduate responds appropriately to diversity issues in the workplace.
+7. The graduate can recommend an organizational structure to match a given organization's situation.
