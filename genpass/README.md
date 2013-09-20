@@ -51,7 +51,9 @@ memorized: e.g. the decryption password for your hard disk, the master password
 for your password manager, and the login password for the backup service you
 use to store your password manager database.
 
-You should *write it down* on a paper that you keep in your wallet.  You should
+You should *write it down* on a paper that you keep in your wallet (NOT under
+the keyboard or taped to the monitor: Most people are fairly good at keeping
+small, valuable pieces of paper safe inside their wallets).  You should
 practice typing it a few dozen times a day for a few weeks.  After you have it
 unforgettably memorized, you *may* destroy the written copy (or put it
 somewhere very safe if you don't trust your brain).  Because this memorization
@@ -66,11 +68,12 @@ but I recently learned the hard way to not depend on a non-public file format
 for important passwords that you cannot easily recover or reset. (I cannot
 confirm that the format is not public, I just haven't found anything about it.)
 
-Is 128 bits enough?
-===================
+Are 128 bits of entropy enough?
+===============================
 
 For most people: Yes.  If you disagree with this, you are way smarter than
-I am and definitely shouldn't trust the software I write.
+I am and definitely shouldn't trust the software I write. see 
+https://github.com/scholarly/kbsum/wiki/big-numbers
 
 TODO
 ====
