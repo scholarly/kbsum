@@ -36,7 +36,7 @@ def unpad(text,blocksize):
         end = i if text[i]=='\x80' else end
         nonzero = i if text[i]!='\0' else nonzero
 
-    print (end,nonzero)
+    #print (end,nonzero)
     invalid = int(end is None) | int(nonzero>end)
     return None if invalid else text[:end]  
 
