@@ -70,7 +70,7 @@ class SecretBox(object):
         for o,m in zip(cdigest,mdigest):
             c|=ord(o)^ord(m)
         if c!=0:
-            raise ValueError("hmac failed")
+            raise ValueError("decryption failed")
 
         return plaintext
 

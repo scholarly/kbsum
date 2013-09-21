@@ -16,9 +16,10 @@ def unpad(text,blocksize):
     We COULD check for all zero bytes after that, but I am feeling lazy.
     """
     tlen = len(text)
+    end = None
     start=tlen-blocksize
     for i in range(start,tlen):
         if text[i]=='\x80':
             # no timing attacks
             end = i
-    return text[:end]  
+    return None if end is None else text[:end]  
