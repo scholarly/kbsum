@@ -7,7 +7,7 @@ from padding import enpad,unpad
 
 class SecretBox(object):
     """
-    An incomplete substitute for the SecretBox in pynacl.secret
+    An incomplete substitute for the SecretBox in nacl.secret
 
     This allows similar functionality while depending only on PyCrypto
 
