@@ -17,3 +17,8 @@ I adapted this code to depend only on PyCrypto. Pynacl/libsodium gives a
 smaller file with faster operations, but may be an unacceptable dependency for
 some projects.
 
+TODO
+----
+RFC 4013 processing for unicode passwords
+scrypt
+unicode/python3
