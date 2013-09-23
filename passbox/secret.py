@@ -5,6 +5,15 @@ from Crypto.Hash import HMAC,SHA256
 
 from padding import enpad,unpad
 
+def ct_match(expected,actual):
+    """returns True iff expected==actual
+    computes in constant time
+    """
+    c = len(expected)-len(actual)
+    for o,m in zip(expected,actual):
+        c|=ord(o)^ord(m)
+    return c==0
+
 class SecretBox(object):
     """
     An incomplete substitute for the SecretBox in nacl.secret
@@ -33,17 +42,18 @@ class SecretBox(object):
 
     def encrypt(self,plaintext,nonce):
         if len(nonce)!=self.NONCE_SIZE:
-            raise ValueError("nonce must be exactly {0:d} bytes long (not {1:d})".format(self.NONCE_SIZE,len(nonce)))
+            raise ValueError("nonce must be exactly {0:d} bytes long (not {1:d})"
+                .format(self.NONCE_SIZE,len(nonce)))
 
         c = self._cipher.new(self.__key,self._cipher.MODE_CBC,nonce)
         ct = c.encrypt(enpad(plaintext,c.block_size))
 
-        mac = HMAC.new(self.__hkey,"",self._hash)
-        mac.update(nonce)
-        mac.update(ct)
+        return nonce+ct+self._getmac(nonce,ct)
 
-        return nonce+ct+mac.digest()
-
+    def _getmac(self,nonce,*ctext):
+        mac = HMAC.new(self.__hkey,nonce,self._hash)
+        map(mac.update,ctext)
+        return mac.digest()
 
     def decrypt(self,ciphertext,nonce=None):
         if nonce is None:
@@ -53,23 +63,15 @@ class SecretBox(object):
         if len(nonce)!=self.NONCE_SIZE:
             raise ValueError("nonce must be exactly {0:d} bytes long".format(self.NONCE_SIZE))
 
-        maclen = self._hash.digest_size
-        l = len(ciphertext) - maclen
+        l = len(ciphertext) - self._hash.digest_size
         cdigest = ciphertext[l:]
         ciphertext = ciphertext[:l]
-
-        mac = HMAC.new(self.__hkey,nonce,self._hash)
-        mac.update(ciphertext)
-        mdigest = mac.digest()
 
         cipher = self._cipher.new(self.__key,self._cipher.MODE_CBC,nonce)
         plaintext = unpad(cipher.decrypt(ciphertext),cipher.block_size)
 
         # we check the mac after decrypting to mitigate timing attacks
-        c = 0
-        for o,m in zip(cdigest,mdigest):
-            c|=ord(o)^ord(m)
-        if c!=0:
+        if not ct_match(cdigest,self._getmac(nonce,ciphertext)):
             raise ValueError("decryption failed")
 
         return plaintext
