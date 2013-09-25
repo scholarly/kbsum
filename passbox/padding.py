@@ -16,45 +16,59 @@ def enpad(text,blocksize):
     see https://en.wikipedia.org/wiki/Block_cipher#Padding
     """
     need = blocksize-(len(text)%blocksize)-1
-    return text + '\x80'+'\0'*need
+    return text + b'\x80'+b'\0'*need
 
-def unpad(text,blocksize):
-    """remove padding added by enpad
 
-    Searches the last blocksize bytes for the last '\x80' byte.
+def _mkunpad():
+    import sys
+    if sys.version_info < (3,0):
+        PAD_FIRST = b'\x80'
+        PAD_ZERO = b'\0'
+    else:
+        PAD_FIRST = 128
+        PAD_ZERO = 0
 
-    If the ciphertext is corrupted or the key is wrong, we will probably get
-    bad padding here.
-    
-    """
-    tlen = len(text)
-    end = None
-    nonzero = None
-    start=tlen-blocksize
-    for i in range(start,tlen):
-        # XXX careful of timing attacks
-        end = i if text[i]=='\x80' else end
-        nonzero = i if text[i]!='\0' else nonzero
+    def unpad(text,blocksize):
+        """remove padding added by enpad
 
-    #print (end,nonzero)
-    invalid = int(end is None) | int(nonzero>end)
-    return None if invalid else text[:end]  
+        Searches the last blocksize bytes for the last '\x80' byte.
 
+        If the ciphertext is corrupted or the key is wrong, we will probably get
+        bad padding here.
+        
+        """
+        tlen = len(text)
+        end = -1
+        nonzero = -1 
+        start=tlen-blocksize
+        for i in range(start,tlen):
+            # XXX careful of timing attacks
+            end = i if text[i]== PAD_FIRST else end
+            nonzero = i if text[i]!=PAD_ZERO else nonzero
+
+        #print (end,nonzero)
+        invalid = int(end<0) | int(end<nonzero)
+        return None if invalid else text[:end]  
+    return unpad
+
+unpad = _mkunpad()
 
 
 if __name__=="__main__":
-    f = "soup is good\x80 food."
+    import Crypto.Random
+    random = Crypto.Random.new().read
+    from binascii import b2a_hex as hx
+
+    f = b"soup is good\x80 food."
     for x in range(len(f)+1):
         e = f[:x]
         p = enpad(e,16)
         u = unpad(p,16)
         if u!=e:
-            print(len(e),e)
+            print(len(e),hx(e))
+            print(len(p),hx(p))
             print(repr(u))
 
-    import Crypto.Random
-    random = Crypto.Random.new().read
-    from binascii import b2a_hex as hx
     block = random(32)
 
     from hashlib import sha256
