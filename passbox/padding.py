@@ -65,6 +65,6 @@ if __name__=="__main__":
         m.update(k)
         l = unpad(k,16)
         if l is not None:
-            print hx(k)
-            print hx(l)
+            print(hx(k))
+            print(hx(l))
 
