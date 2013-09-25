@@ -5,12 +5,16 @@ from Crypto.Hash import HMAC,SHA256
 
 from padding import enpad,unpad
 
-def ct_match(expected,actual):
+def consteq(actual,expected):
     """returns True iff expected==actual
     computes in constant time
     """
+    if type(actual) != type(expected):
+        raise TypeError("cannot compare different types")
+
     c = len(expected)-len(actual)
-    for o,m in zip(expected,actual):
+    tmp = actual if c==0 else expected # idea from passlib
+    for o,m in zip(expected,tmp):
         c|=ord(o)^ord(m)
     return c==0
 
@@ -71,7 +75,7 @@ class SecretBox(object):
         plaintext = unpad(cipher.decrypt(ciphertext),cipher.block_size)
 
         # we check the mac after decrypting to mitigate timing attacks
-        if not ct_match(cdigest,self._getmac(nonce,ciphertext)):
+        if not consteq(cdigest,self._getmac(nonce,ciphertext)):
             raise ValueError("decryption failed")
 
         return plaintext
