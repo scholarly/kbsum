@@ -5,18 +5,34 @@ from Crypto.Hash import HMAC,SHA256
 
 from padding import enpad,unpad
 
-def consteq(actual,expected):
-    """returns True iff expected==actual
-    computes in constant time
-    """
-    if type(actual) != type(expected):
-        raise TypeError("cannot compare different types")
+import sys
+if sys.version_info < (3,0):
+    def consteq(actual,expected):
+        """returns True iff expected==actual
+        computes in constant time
+        """
+        if type(actual) != type(expected):
+            raise TypeError("cannot compare different types")
 
-    c = len(expected)-len(actual)
-    tmp = actual if c==0 else expected # idea from passlib
-    for o,m in zip(expected,tmp):
-        c|=ord(o)^ord(m)
-    return c==0
+        c = len(expected)-len(actual)
+        tmp = actual if c==0 else expected # idea from passlib
+        for o,m in zip(expected,tmp):
+            c|=ord(o)^ord(m)
+        return c==0
+else:
+    def consteq(actual,expected):
+        """returns True iff expected==actual
+        computes in constant time
+        """
+        if type(actual) != type(expected):
+            raise TypeError("cannot compare different types")
+
+        c = len(expected)-len(actual)
+        tmp = actual if c==0 else expected # idea from passlib
+        for o,m in zip(expected,tmp):
+            c|=o^m
+        return c==0
+    
 
 class SecretBox(object):
     """

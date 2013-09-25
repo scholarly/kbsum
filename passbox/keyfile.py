@@ -11,10 +11,10 @@ import os
 from kdf import derive_key
 
 from pinentry import pinentry
+from saslprep import saslprep
 
 SALT_SIZE = 32
 
-# XXX need to do sasl stringprep on password
 
 class KeyBox(object):
     def __init__(self,box,random):
@@ -53,9 +53,9 @@ class KeyFile(KeyBox):
             with open(self.keyfilename,"rb") as keyfile:
                 ctext = keyfile.read()#KEYFILE_SIZE)
                 masterkey = self.pinentry( "Please enter your master password to unlock your keyfile.",
-                    lambda p: self.unwrapkey(p,ctext))
+                    lambda p: self.unwrapkey(saslprep(p),ctext))
         else:
-            kekey = self.pinentry( "Please enter a new master password to protect your keyfile.",None,True)
+            kekey = self.pinentry( "Please enter a new master password to protect your keyfile.",saslprep,True)
             masterkey = self.random(self.box.KEY_SIZE)
             with open(self.keyfilename,"wb") as keyfile:
                 keyfile.write(self.wrapkey(kekey,masterkey))
@@ -70,7 +70,7 @@ class KeyFile(KeyBox):
 
     def encode(self,pw):
         sb = self.__sb or self.open()
-        return sb.encrypt(pw.encode("utf8"),self.random(sb.NONCE_SIZE))
+        return sb.encrypt(bytes(pw),self.random(sb.NONCE_SIZE))
         
     def decode(self,ctext):
         sb = self.__sb or self.open()

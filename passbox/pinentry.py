@@ -7,7 +7,13 @@ Feel free to implement your own UI for the same protocol.
 """
 
 import sys
-from getpass import getpass
+
+if sys.version_info < (3,0):
+    from getpass import getpass as _gp
+    def getpass(*args,**kw):
+        return unicode(_gp(*args,**kw))
+else:
+    from getpass import getpass 
 
 __all__=["pinentry"]
 
