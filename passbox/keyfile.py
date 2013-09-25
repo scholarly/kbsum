@@ -8,40 +8,42 @@ stored in keyfile.
 """
 
 import os
-from secret import SecretBox
 from kdf import derive_key
 
 from pinentry import pinentry
-import Crypto.Random
-
-random = Crypto.Random.new().read
 
 SALT_SIZE = 32
 
 # XXX need to do sasl stringprep on password
 
-def wrapkey( password, key ):
-    """encrypt a key using a password-derived key
-    """
-    salt = random(SALT_SIZE)
-    kek = derive_key(password,salt,SecretBox.KEY_SIZE)
-    sbox = SecretBox(kek)
-    nonce = random(sbox.NONCE_SIZE)
-    payload = sbox.encrypt(key,nonce)
-    return salt+payload
-
-def unwrapkey( password, wrapped ):
-    """decrypt the key encrypted by the password-derived key 
-    """
-    salt = wrapped[:SALT_SIZE]
-    payload = wrapped[SALT_SIZE:]
-    kek = derive_key(password,salt,SecretBox.KEY_SIZE)
-    sbox = SecretBox(kek)
-    return sbox.decrypt(payload)
-
-
 class KeyBox(object):
-    def __init__(self,fname,pe=pinentry):
+    def __init__(self,box,random):
+        self.random = random
+        self.box = box
+
+    def wrapkey(self, password, key ):
+        """encrypt a key using a password-derived key
+        """
+        salt = self.random(SALT_SIZE)
+        kek = derive_key(password,salt,self.box.KEY_SIZE)
+        sbox = self.box(kek)
+        nonce = self.random(sbox.NONCE_SIZE)
+        payload = sbox.encrypt(key,nonce)
+        return salt+payload
+
+    def unwrapkey(self, password, wrapped ):
+        """decrypt the key encrypted by the password-derived key 
+        """
+        salt = wrapped[:SALT_SIZE]
+        payload = wrapped[SALT_SIZE:]
+        kek = derive_key(password,salt,self.box.KEY_SIZE)
+        sbox = self.box(kek)
+        return sbox.decrypt(payload)
+
+
+class KeyFile(KeyBox):
+    def __init__(self,box,random,fname,pe=pinentry):
+        super(KeyFile,self).__init__(box,random)
         self.keyfilename = fname
         self.pinentry = pe
         self.__sb = None
@@ -51,14 +53,14 @@ class KeyBox(object):
             with open(self.keyfilename,"rb") as keyfile:
                 ctext = keyfile.read()#KEYFILE_SIZE)
                 masterkey = self.pinentry( "Please enter your master password to unlock your keyfile.",
-                    lambda p: unwrapkey(p,ctext))
+                    lambda p: self.unwrapkey(p,ctext))
         else:
             kekey = self.pinentry( "Please enter a new master password to protect your keyfile.",None,True)
-            masterkey = random(SecretBox.KEY_SIZE)
+            masterkey = self.random(self.box.KEY_SIZE)
             with open(self.keyfilename,"wb") as keyfile:
-                keyfile.write(wrapkey(kekey,masterkey))
+                keyfile.write(self.wrapkey(kekey,masterkey))
 
-        self.__sb = SecretBox(masterkey)
+        self.__sb = self.box(masterkey)
         return self.__sb
              
 
@@ -68,7 +70,7 @@ class KeyBox(object):
 
     def encode(self,pw):
         sb = self.__sb or self.open()
-        return sb.encrypt(pw.encode("utf8"),random(sb.NONCE_SIZE))
+        return sb.encrypt(pw.encode("utf8"),self.random(sb.NONCE_SIZE))
         
     def decode(self,ctext):
         sb = self.__sb or self.open()
@@ -77,6 +79,10 @@ class KeyBox(object):
 
 
 if __name__=="__main__":
+    import Crypto.Random
+    from secret import SecretBox
+    random = Crypto.Random.new().read
+
     import sys
     import argparse
     p = argparse.ArgumentParser()
@@ -88,7 +94,7 @@ if __name__=="__main__":
     opt = p.parse_args()
     print(opt)
 
-    keybox = KeyBox(opt.keyfile)
+    keybox = KeyFile(SecretBox,random,opt.keyfile)
 
     with open(opt.source,"rb") as fin:
         text = fin.read()
