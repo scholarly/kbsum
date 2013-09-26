@@ -17,7 +17,7 @@ else:
 
 __all__=["pinentry"]
 
-def pinentry(prompt,check,new=False):
+def pinentry(prompt,check,new=False,getpass=getpass):
     """prompt the user for a password, check it for validity
     """
     sys.stderr.write(prompt+"\n")
