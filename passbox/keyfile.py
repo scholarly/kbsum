@@ -77,37 +77,43 @@ class KeyFile(KeyBox):
         return sb.decrypt(ctext)
         
 
-
-if __name__=="__main__":
-    import Crypto.Random
-    from secret import SecretBox
-    random = Crypto.Random.new().read
-
-    import sys
+def main(*args):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("-c",action="store_true",default=False)
-    p.add_argument("keyfile")
-    p.add_argument("source")
-    p.add_argument("target")
+    p.add_argument("-c",action="store_true",default=False,help="encrypt source file (default:decrypt)")
+    p.add_argument("-d",dest="c",action="store_false",help="decrypt source file (default)")
+    p.add_argument("-n",action="store_true",default=False,help="use NaCl instead of Crypto")
+    p.add_argument("keyfile",help="store or read symetric key here")
+    p.add_argument("source", help="read data from SOURCE")
+    p.add_argument("target", help="write data to TARGET")
 
-    opt = p.parse_args()
-    print(opt)
+    opt = p.parse_args(args)
+    #print(opt)
 
+    if opt.n:
+        from nacl.utils import random
+        from nacl.secret import SecretBox
+    else:
+        import Crypto.Random
+        from secret import SecretBox
+        random = Crypto.Random.new().read
+        
     keybox = KeyFile(SecretBox,random,opt.keyfile)
 
     with open(opt.source,"rb") as fin:
         text = fin.read()
 
     try:
-
         if opt.c:
             out = keybox.encode(text)
         else:
             out = keybox.decode(text)
     except KeyboardInterrupt:
-        sys.exit(1)
+        raise SystemExit(1)
 
     with open(opt.target,"wb") as fout:
         fout.write(out)
 
+if __name__=="__main__":
+    import sys
+    main(*sys.argv[1:])
