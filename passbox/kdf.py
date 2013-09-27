@@ -17,6 +17,12 @@ def _all(f):
     __all__.append(f.__name__)
     return f
 
+if bytes is str: # python < 3.0
+    byte = ord
+else:
+    unicode = str
+    byte = lambda x: x
+
 try:
     from bcrypt import kdf as _bckdf 
 
@@ -26,7 +32,7 @@ try:
 
         log2(rounds) is extracted from the first byte of password
         """
-        rounds = 1<<((ord(password[0])&31)+5)
+        rounds = 1<<((byte(password[0])&31)+5)
         #print "using PBKDF2 with %d rounds of BcryptSHA-512" % rounds
         return _bckdf(password[1:],salt,dklen,rounds)
 
@@ -51,7 +57,7 @@ def pbkdf2_sha512(password,salt,dklen):
 
     log2(rounds) is extracted from the first byte of password
     """
-    rounds = 1<<((ord(password[0])&31)+16) 
+    rounds = 1<<((byte(password[0])&31)+16) 
     #print "using PBKDF2 with %d rounds of SHA-512" % rounds
     return PBKDF2(password[1:],salt,dklen,rounds,prf_hmac_sha512) 
 
@@ -69,8 +75,8 @@ try:
         return _skdf(password[2:],salt,N,r,p,dklen)
 
     def decode_scrypt_params(pw):
-        N = 1<<((ord(pw[0])&31)+10)# min: 1MiB max: unreasonable 
-        rp = (ord(pw[1])-32)&0x7f # [ -~] is 95 characters
+        N = 1<<((byte(pw[0])&31)+10)# min: 1MiB max: unreasonable 
+        rp = (byte(pw[1])-32)&0x7f # [ -~] is 95 characters
         r = 1<<((rp&15)+3)
         p = 1<<((rp>>4))
         return N,r,p
@@ -118,6 +124,8 @@ KDFS={
     3:scrypt, # [`-~] '`abcdefghijklmnopqrstuvwxyz{|}~'
     }
 
+
+    
 @_all
 def derive_key(password,salt,dklen):
     """ derive `dklen` bytes of key material from `password` and `salt`
@@ -127,7 +135,10 @@ def derive_key(password,salt,dklen):
     extract it from the first character of the password -- an additional secret.
 
     """
-    whichkdf = ord(password[0])>>5
+    if type(password) is unicode:
+        password = password.encode("utf-8")
+
+    whichkdf = byte(password[0])>>5
 
     kdf = KDFS.get(whichkdf)
     if kdf is None:

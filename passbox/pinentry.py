@@ -9,6 +9,7 @@ Feel free to implement your own UI for the same protocol.
 import sys
 
 if sys.version_info < (3,0):
+    # we would *really* like a unicode string so we can pass it to SASLprep
     from getpass import getpass as _gp
     def getpass(*args,**kw):
         return unicode(_gp(*args,**kw))
