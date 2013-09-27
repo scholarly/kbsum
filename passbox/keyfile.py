@@ -8,10 +8,9 @@ stored in keyfile.
 """
 
 import os
-from kdf import derive_key
+from passbox.kdf import derive_key
 
-from pinentry import pinentry
-from saslprep import saslprep
+from passbox.pinentry import pinentry
 
 SALT_SIZE = 32
 
@@ -53,9 +52,9 @@ class KeyFile(KeyBox):
             with open(self.keyfilename,"rb") as keyfile:
                 ctext = keyfile.read()#KEYFILE_SIZE)
                 masterkey = self.pinentry( "Please enter your master password to unlock your keyfile.",
-                    lambda p: self.unwrapkey(saslprep(p),ctext))
+                    lambda p: self.unwrapkey(p,ctext))
         else:
-            kekey = self.pinentry( "Please enter a new master password to protect your keyfile.",saslprep,True)
+            kekey = self.pinentry( "Please enter a new master password to protect your keyfile.",None,True)
             masterkey = self.random(self.box.KEY_SIZE)
             with open(self.keyfilename,"wb") as keyfile:
                 keyfile.write(self.wrapkey(kekey,masterkey))
