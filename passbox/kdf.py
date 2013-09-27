@@ -87,7 +87,9 @@ try:
         raise ValueError("out of range")
 
     def encode_scrypt_params(N,r,p):
-        
+        # TODO: do some more sanity checks 
+        # e.g. using more than a GiB of RAM is currently unreasonable
+
         logN = log2(N)-10
         if logN<0 or logN>31:
             raise ValueError("N out of range",N)
