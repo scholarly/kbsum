@@ -53,32 +53,3 @@ def _mkunpad():
 
 unpad = _mkunpad()
 
-
-if __name__=="__main__":
-    import Crypto.Random
-    random = Crypto.Random.new().read
-    from binascii import b2a_hex as hx
-
-    f = b"soup is good\x80 food."
-    for x in range(len(f)+1):
-        e = f[:x]
-        p = enpad(e,16)
-        u = unpad(p,16)
-        if u!=e:
-            print(len(e),hx(e))
-            print(len(p),hx(p))
-            print(repr(u))
-
-    block = random(32)
-
-    from hashlib import sha256
-    m = sha256(block)
-
-    for x in range(15):
-        k = m.digest()
-        m.update(k)
-        l = unpad(k,16)
-        if l is not None:
-            print(hx(k))
-            print(hx(l))
-
