@@ -48,8 +48,8 @@ creation of arbitrary and unlimited-in-number aliases. This is an easy-to-add
 feature already supported by many privacy-oriented email service providers.
 
 First, how to you get the capability to the right people? For now, let's just
-say you publish it on your web site, protected by a captcha or such. (maybe a
-webkey.)[http://waterken.sourceforge.net/web-key/]
+say you publish it on your web site, protected by a captcha or such. [maybe a
+webkey.](http://waterken.sourceforge.net/web-key/)
 
 Of course, your bank is not going to visit your web site to get your email
 address. You will have to give it to them. But you can give them a specific
@@ -89,19 +89,18 @@ butter of email address harvesters.
 A mailing list manager (a TTP: trusted third party, like PayPal) can create
 it's own caps for messages that get published.
 
-A: join mailing list M with address M@A
-M: creates A@M as an alias for M@A
-B: join mailing list M with address M@B
-M: creates B@M as an alias for M@B
-B: sends message to M@M (the list post address) sender M@B
-M: rewrites M@B to B@M and publishes message to archive, forwards to M@A...
-A: receives message from: B@M reply-to: M@M
-A: replies privately to B@M
-M: forwards A's message to: M@B from: A@M with a link to an introduction page
-B: reads message visits, introduction page, completes captcha
-M: sends the completed share request to M@A
-A: replies directly to Bs new cap A@B with her own new cap B@A, fully
-introduced.
+    A: join mailing list M with address M@A
+    M: creates A@M as an alias for M@A
+    B: join mailing list M with address M@B
+    M: creates B@M as an alias for M@B
+    B: sends message to M@M (the list post address) sender M@B
+    M: rewrites M@B to B@M and publishes message to archive, forwards to M@A...
+    A: receives message from: B@M reply-to: M@M
+    A: replies privately to B@M
+    M: forwards A's message to: M@B from: A@M with a link to an introduction page
+    B: reads message visits, introduction page, completes captcha
+    M: sends the completed share request to M@A
+    A: replies directly to Bs new cap A@B with her own new cap B@A, fully introduced.
 
 If a non-subscriber sends email to A@M or B@M, M can have them complete the
 captcha *before* forwarding the message.
