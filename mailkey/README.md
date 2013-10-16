@@ -57,7 +57,7 @@ capability to "tag the message as important" so it doesn't get lost in the
 haystack.  You can also attach a specific sender to this capability.
 
 What about PayPal? You can give them a specific capability, just like your
-bank.  Unfortunately PayPal is very generous in sharing your email with
+bank.  Unfortunately, PayPal is very generous in sharing your email with
 merchants and advertisers. This is where some software needs to be changed,
 and you will need PayPal to cooperate.  You give them a third-party sharing
 capability. When a merchant wishes to contact you, PayPal creates a grant
