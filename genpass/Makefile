@@ -1,7 +1,15 @@
 
-genpass: genpass.c readlist.c bigdivide.h dicewords.h readlist.h
-	$(CC) $(CFLAGS) -std=c99 genpass.c readlist.c -o$@ 
+SRC := $(wildcard *.c)
+HDR := $(wildcard *.h)
+OBJ := $(SRC:.c=.o)
 
-.PHONY: clean
+all: genpass
+
+genpass: $(OBJ)
+	$(CC) $(CFLAGS) $^ -o$@
 clean:
-	-rm genpass
+	-rm -f genpass $(OBJ)
+indent:
+	indent -linux -l300 -brf *.[ch]
+
+.PHONY: clean indent all options

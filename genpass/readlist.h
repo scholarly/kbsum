@@ -1,1 +1,1 @@
-char ** readlist(char*fname, int *count);
+char **readlist(char *fname, int *count);
